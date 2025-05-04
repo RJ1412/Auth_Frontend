@@ -53,23 +53,10 @@ export default function AuthPage() {
       setMessage(data.message || "Success");
 
       if (!isLogin) {
-        const otpRes = await axios.post(`${BASE_URL}/send-verify-otp`, { email: form.email }, {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const otpData = otpRes.data;
-        setMessage(otpData.message || "OTP Sent Successfully");
-        
-        if (otpRes.status === 200) {
-          setStep("verify");
-        } else {
-          setMessage("Error sending OTP");
-        }
-      } else {
-        window.location.href = "/dashboard"; // Redirect to dashboard
+        setStep("verify"); // Move directly to verify step
+      }
+       else {
+        window.location.href = "/logout"; // Redirect to dashboard
       }
     } catch (error) {
       setMessage(extractMessage(error));
