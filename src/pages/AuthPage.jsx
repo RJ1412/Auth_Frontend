@@ -31,7 +31,7 @@ export default function AuthPage() {
     setMessage("");
   };
 
-  // Helper function to extract error message
+
   const extractMessage = (err, fallback = "Something went wrong") =>
     err?.response?.data?.message || err?.message || fallback;
 
@@ -62,7 +62,7 @@ export default function AuthPage() {
         navigate("/logout");
       }
     } catch (error) {
-      setMessage(extractMessage(error));
+      setMessage(extractMessage(error) || "User already exist");
     } finally {
       setLoading(false); 
     }
