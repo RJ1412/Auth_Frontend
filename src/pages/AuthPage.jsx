@@ -61,8 +61,13 @@ export default function AuthPage() {
         });
 
         const otpData = otpRes.data;
-        setMessage(otpData.message);
-        setStep("verify");
+        setMessage(otpData.message || "OTP Sent Successfully");
+        
+        if (otpRes.status === 200) {
+          setStep("verify");
+        } else {
+          setMessage("Error sending OTP");
+        }
       } else {
         window.location.href = "/dashboard"; // Redirect to dashboard
       }
@@ -89,13 +94,14 @@ export default function AuthPage() {
       });
 
       const data = await res.json();
-      setMessage(data.message);
-
       if (res.ok) {
-        window.location.href = "/dashboard"; // Redirect to dashboard on success
+        setMessage(data.message || "Account verified successfully.");
+        window.location.href = "/dashboard"; // Redirect on success
+      } else {
+        setMessage(data.message || "Failed to verify OTP.");
       }
     } catch (error) {
-      setMessage("Failed to verify OTP.");
+      setMessage("Error during OTP verification.");
     } finally {
       setLoading(false);
     }
