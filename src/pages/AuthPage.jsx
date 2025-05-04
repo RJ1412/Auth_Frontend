@@ -33,7 +33,8 @@ export default function AuthPage() {
 
 
   const extractMessage = (err, fallback = "Something went wrong") =>
-    err?.response?.data?.message || err?.message || fallback;
+    err?.response?.data?.message || err?.response?.data?.error || err?.message || fallback;
+  
 
   const handleAuth = async () => {
     if (!form.email || !form.password || (!isLogin && (!form.name || !form.username))) {
@@ -62,7 +63,7 @@ export default function AuthPage() {
         navigate("/logout");
       }
     } catch (error) {
-      setMessage(extractMessage(error) || "User already exist");
+      setMessage(extractMessage(error));
     } finally {
       setLoading(false); 
     }
