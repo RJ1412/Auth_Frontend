@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "./AuthPage.css";
-
+import axios from "axios";  
 import instagram from "../images/instagram_dark.jpg"
 import github from "../images/github_dark.png";
 import linkdin from "../images/linkedin_dark.jpg"
@@ -29,50 +29,57 @@ export default function AuthPage() {
     setMessage("");
   };
 
-  const handleAuth = async () => {
-    try {
-      const url = isLogin ? `${BASE_URL}/login` : `${BASE_URL}/register`;
-      const res = await fetch(url, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(isLogin 
-          ? { email: form.email, password: form.password } 
-          : form
-        ),
-      });
-      
 
-      const data = await res.json();
+ 
+const handleAuth = async () => {
+  try {
+    const url = isLogin
+      ? `${BASE_URL}/login`
+      : `${BASE_URL}/register`;
 
-      if (!res.ok) {
-        if (data.redirectToOtp) {
-          setStep("verify");
-          setMessage(data.message || "Please verify your account");
-          return;
+    const res = await axios.post(
+      url,
+      isLogin
+        ? { email: form.email, password: form.password }
+        : form,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = res.data;
+    setMessage(data.message || "Success");
+
+    if (!isLogin) {
+      const otpRes = await axios.post(
+        `${BASE_URL}/send-verify-otp`,
+        { email: form.email },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        throw new Error(data.error || data.message || "Something went wrong");
-      }
+      );
 
-      setMessage(data.message || "Success");
-
-      if (!isLogin) {
-        const otpRes = await fetch(`${BASE_URL}/send-verify-otp`, {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: form.email }),
-        });
-        const otpData = await otpRes.json();
-        setMessage(otpData.message);
-        setStep("verify");
-      } else {
-        window.location.href = "/logout";
-      }
-    } catch (error) {
-      setMessage(error.message);
+      const otpData = otpRes.data;
+      setMessage(otpData.message);
+      setStep("verify");
+    } else {
+      window.location.href = "/logout";
     }
-  };
+  } catch (error) {
+    setMessage(
+      error.response?.data?.message ||
+      error.message ||
+      "Something went wrong"
+    );
+  }
+};
+
 
   const handleVerifyOtp = async () => {
     const res = await fetch(`${BASE_URL}/verify-account`, {
