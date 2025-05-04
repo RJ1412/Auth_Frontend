@@ -6,7 +6,8 @@ import instagram from "../images/instagram_dark.jpg"
 import github from "../images/github_dark.png";
 import linkdin from "../images/linkedin_dark.jpg"
 
-const BASE_URL = "http://localhost:5000/api/v1/users";
+const BASE_URL = "http://auth-backend-zfgk.vercel.app/api/v1/users";
+
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);

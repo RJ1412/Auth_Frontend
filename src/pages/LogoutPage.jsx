@@ -14,7 +14,7 @@ const LogoutPage = () => {
       setLoading(true);
       setMessage("Logging you out...");
 
-      await axios.post("http://localhost:5000/api/v1/users/logout", {}, {
+      await axios.post("http://auth-backend-zfgk.vercel.app/api/v1/users/logout", {}, {
         withCredentials: true, 
       });
 
