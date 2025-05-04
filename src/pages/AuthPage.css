@@ -1,0 +1,195 @@
+/* Base Styles */
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .auth-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #000000, #2c2c2c);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+    color: white;
+  }
+  
+  .auth-content {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .dashboard-title {
+    font-size: 4rem;  /* Increased font size */
+    font-weight: 800;
+    background: linear-gradient(to right, #ffffff, #999999);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 2rem;
+    text-align: center; /* Centered text */
+  }
+  
+  .form-box {
+    background-color: rgba(20, 20, 20, 0.85);
+    padding: 3rem;
+    border-radius: 1.5rem;
+    max-width: 450px;  /* Increased form size */
+    margin: auto;
+    border: 1px solid #555;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .form-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 0.9rem;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    border: 1px solid #444;
+    background-color: #111;
+    color: white;
+    text-align: center;
+    font-size: 1rem;
+  }
+  
+  .auth-button {
+    text-align: center;
+    width: 100%;
+    padding: 0.9rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 1rem;
+    background: linear-gradient(to right, #ffffff, #777);
+    color: #000;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: 0.3s;
+  }
+  
+  .auth-button:hover {
+    background: linear-gradient(to right, #ccc, #999);
+  }
+  
+  .toggle-text {
+    font-size: 0.9rem;
+    color: #bbb;
+    text-align: center;
+    width: 100%; 
+  }
+  
+  .toggle-button {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 0.3rem;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .toggle-button:hover {
+    color: #ddd;
+  }
+  
+  .message-text {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    background: #1a1a1a;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #444;
+    display: inline-block;
+    max-width: 90%;
+    word-break: break-word;
+  }
+  
+  /* Footer */
+  .footer {
+    text-align: center;
+    color: white;
+    padding: 1rem;
+  }
+  
+  .footer .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .social-icon {
+    width: 30px;
+    height: 30px;
+    transition: 0.3s;
+  }
+  
+  .social-icon:hover {
+    transform: scale(1.2);
+  }
+  
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .auth-container {
+      background: linear-gradient(to bottom right, #000000, #1a1a1a);
+    }
+  
+    .form-box {
+      background-color: rgba(30, 30, 30, 0.95);
+      border-color: #666;
+    }
+  
+    .form-input {
+      background-color: #111;
+      border-color: #555;
+    }
+  }
+  
+  .toggle-button {
+    background: none;
+    border: none;
+    color: #ccc;
+    margin-left: 0.3rem;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.9rem;
+  }
+  .toggle-button:hover {
+    color: #fff;
+  }
+  
+  .form-subtitle {
+    font-size: 0.95rem;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    max-width: 300px;
+  }
+  
+  .forgot-password-link {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #aaa;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: color 0.3s ease;
+  }
+  
+  .forgot-password-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+  
