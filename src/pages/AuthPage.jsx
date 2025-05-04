@@ -219,7 +219,7 @@ export default function AuthPage() {
             transition={{ duration: 0.5 }}
             className="form-box"
           >
-            <h3 className="form-title">🔐 Forgot Password?</h3>
+            <h3 className="form-title">Forgot Password?</h3>
             <p className="form-subtitle">Enter your email to receive a reset OTP.</p>
             <input
               placeholder="Email address"
@@ -235,7 +235,7 @@ export default function AuthPage() {
               className="auth-button"
               disabled={loading}
             >
-              {loading ? "Sending OTP..." : "Send OTP 📩"}
+              {loading ? "Sending OTP..." : "Send OTP "}
             </motion.button>
             <button onClick={() => setStep("auth")} className="toggle-button">
               ← Back to Login
