@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import "./AuthPage.css";
 import axios from "axios";  
-import instagram from "../images/instagram_dark.jpg"
+import instagram from "../images/instagram_dark.jpg";
 import github from "../images/github_dark.png";
-import linkdin from "../images/linkedin_dark.jpg"
+import linkdin from "../images/linkedin_dark.jpg";
 
 const BASE_URL = "https://auth-backend-zfgk.vercel.app/api/v1/users";
-
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,7 +16,7 @@ export default function AuthPage() {
   const [message, setMessage] = useState("");
   const [resetEmail, setResetEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
-
+  const [loading, setLoading] = useState(false); // New loading state
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,75 +28,85 @@ export default function AuthPage() {
     setMessage("");
   };
 
+  // Helper function to extract error message
+  const extractMessage = (err, fallback = "Something went wrong") =>
+    err?.response?.data?.message || err?.message || fallback;
 
- 
-const handleAuth = async () => {
-  try {
-    const url = isLogin
-      ? `${BASE_URL}/login`
-      : `${BASE_URL}/register`;
+  const handleAuth = async () => {
+    if (!form.email || !form.password || (!isLogin && (!form.name || !form.username))) {
+      setMessage("Please fill in all required fields.");
+      return;
+    }
 
-    const res = await axios.post(
-      url,
-      isLogin
-        ? { email: form.email, password: form.password }
-        : form,
-      {
+    try {
+      setLoading(true); // Start loading
+      const url = isLogin ? `${BASE_URL}/login` : `${BASE_URL}/register`;
+
+      const res = await axios.post(url, isLogin ? { email: form.email, password: form.password } : form, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
-    const data = res.data;
-    setMessage(data.message || "Success");
+      const data = res.data;
+      setMessage(data.message || "Success");
 
-    if (!isLogin) {
-      const otpRes = await axios.post(
-        `${BASE_URL}/send-verify-otp`,
-        { email: form.email },
-        {
+      if (!isLogin) {
+        const otpRes = await axios.post(`${BASE_URL}/send-verify-otp`, { email: form.email }, {
           withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },
-        }
-      );
+        });
 
-      const otpData = otpRes.data;
-      setMessage(otpData.message);
-      setStep("verify");
-    } else {
-      window.location.href = "/logout";
+        const otpData = otpRes.data;
+        setMessage(otpData.message);
+        setStep("verify");
+      } else {
+        window.location.href = "/dashboard"; // Redirect to dashboard
+      }
+    } catch (error) {
+      setMessage(extractMessage(error));
+    } finally {
+      setLoading(false); // End loading
     }
-  } catch (error) {
-    setMessage(
-      error.response?.data?.message ||
-      error.message ||
-      "Something went wrong"
-    );
-  }
-};
-
+  };
 
   const handleVerifyOtp = async () => {
-    const res = await fetch(`${BASE_URL}/verify-account`, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: form.email, otp }),
-    });
+    if (!otp) {
+      setMessage("Please enter the OTP.");
+      return;
+    }
 
-    const data = await res.json();
-    setMessage(data.message);
+    try {
+      setLoading(true);
+      const res = await fetch(`${BASE_URL}/verify-account`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email, otp }),
+      });
 
-    if (res.ok) {
-      window.location.href = "/logout";
+      const data = await res.json();
+      setMessage(data.message);
+
+      if (res.ok) {
+        window.location.href = "/dashboard"; // Redirect to dashboard on success
+      }
+    } catch (error) {
+      setMessage("Failed to verify OTP.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleForgotPassword = async () => {
+    if (!resetEmail) {
+      setMessage("Please enter your email.");
+      return;
+    }
+
     try {
       const res = await fetch(`${BASE_URL}/send-reset-otp`, {
         method: "POST",
@@ -113,6 +122,11 @@ const handleAuth = async () => {
   };
 
   const handleResetPassword = async () => {
+    if (!resetEmail || !otp || !newPassword) {
+      setMessage("Please fill in all fields.");
+      return;
+    }
+
     try {
       const res = await fetch(`${BASE_URL}/reset-password`, {
         method: "POST",
@@ -124,16 +138,13 @@ const handleAuth = async () => {
       if (res.ok) {
         setStep("auth");
         setTimeout(() => {
-          window.location.href = "/";
+          window.location.href = "/"; // Redirect after reset
         }, 1000);
       }
     } catch (err) {
       setMessage("Failed to reset password.");
     }
-
-
   };
-
 
   return (
     <div className="auth-container">
@@ -165,19 +176,18 @@ const handleAuth = async () => {
 
             <input name="email" placeholder="Email" value={form.email} onChange={handleChange} className="form-input" />
             <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} className="form-input" />
+
             {isLogin && (
               <p
-              className="forgot-password-link"
-              onClick={() => setStep("forgot")}
-            >
-              Forgot Password?
-            </p>
-            
-            
+                className="forgot-password-link"
+                onClick={() => setStep("forgot")}
+              >
+                Forgot Password?
+              </p>
             )}
 
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }} onClick={handleAuth} className="auth-button">
-              {isLogin ? "Login" : "Register"}
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }} onClick={handleAuth} className="auth-button" disabled={loading}>
+              {loading ? "Processing..." : (isLogin ? "Login" : "Register")}
             </motion.button>
 
             <p className="toggle-text">
@@ -198,8 +208,8 @@ const handleAuth = async () => {
           >
             <h3 className="form-title">Verify OTP</h3>
             <input placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} className="form-input" />
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }} onClick={handleVerifyOtp} className="auth-button">
-              Verify
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }} onClick={handleVerifyOtp} className="auth-button" disabled={loading}>
+              {loading ? "Verifying..." : "Verify"}
             </motion.button>
           </motion.div>
         )}
@@ -227,8 +237,9 @@ const handleAuth = async () => {
               whileTap={{ scale: 0.97 }}
               onClick={handleForgotPassword}
               className="auth-button"
+              disabled={loading}
             >
-              Send OTP 📩
+              {loading ? "Sending OTP..." : "Send OTP 📩"}
             </motion.button>
             <button onClick={() => setStep("auth")} className="toggle-button">
               ← Back to Login
@@ -270,18 +281,15 @@ const handleAuth = async () => {
               whileTap={{ scale: 0.97 }}
               onClick={handleResetPassword}
               className="auth-button"
+              disabled={loading}
             >
-              Reset Password
+              {loading ? "Resetting..." : "Reset Password"}
             </motion.button>
             <button onClick={() => setStep("auth")} className="toggle-button">
               ← Back to Login
             </button>
           </motion.div>
         )}
-
-
-
-
       </div>
 
       <footer className="footer">
