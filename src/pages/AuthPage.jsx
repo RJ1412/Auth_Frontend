@@ -5,7 +5,8 @@ import axios from "axios";
 import instagram from "../images/instagram_dark.jpg";
 import github from "../images/github_dark.png";
 import linkdin from "../images/linkedin_dark.jpg";
-
+import { useNavigate } from "react-router-dom";
+const navigate = useNavigate();
 const BASE_URL = "https://auth-backend-zfgk.vercel.app/api/v1/users";
 
 export default function AuthPage() {
@@ -56,7 +57,7 @@ export default function AuthPage() {
         setStep("verify"); // Move directly to verify step
       }
        else {
-        window.location.href = "/logout"; // Redirect to dashboard
+        navigate("/logout");
       }
     } catch (error) {
       setMessage(extractMessage(error));
@@ -83,7 +84,7 @@ export default function AuthPage() {
       const data = await res.json();
       if (res.ok) {
         setMessage(data.message || "Account verified successfully.");
-        window.location.href = "/logout"; // Redirect on success
+        navigate("/logout");
       } else {
         setMessage(data.message || "Failed to verify OTP.");
       }
@@ -131,7 +132,7 @@ export default function AuthPage() {
       if (res.ok) {
         setStep("auth");
         setTimeout(() => {
-          window.location.href = "/"; // Redirect after reset
+          navigate("/");
         }, 1000);
       }
     } catch (err) {
