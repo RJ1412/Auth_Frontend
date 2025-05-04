@@ -19,7 +19,7 @@ export default function AuthPage() {
   const [message, setMessage] = useState("");
   const [resetEmail, setResetEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false); 
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -42,7 +42,7 @@ export default function AuthPage() {
     }
 
     try {
-      setLoading(true); // Start loading
+      setLoading(true); 
       const url = isLogin ? `${BASE_URL}/login` : `${BASE_URL}/register`;
 
       const res = await axios.post(url, isLogin ? { email: form.email, password: form.password } : form, {
@@ -56,7 +56,7 @@ export default function AuthPage() {
       setMessage(data.message || "Success");
 
       if (!isLogin) {
-        setStep("verify"); // Move directly to verify step
+        setStep("verify"); 
       }
        else {
         navigate("/logout");
@@ -64,7 +64,7 @@ export default function AuthPage() {
     } catch (error) {
       setMessage(extractMessage(error));
     } finally {
-      setLoading(false); // End loading
+      setLoading(false); 
     }
   };
 
@@ -151,7 +151,7 @@ export default function AuthPage() {
           transition={{ duration: 0.8 }}
           className="dashboard-title"
         >
-          Your Dev Universe<br /> Stay Updated. Stay Ahead
+          Your Dev Universe<br /> Stay Updated! Stay Ahead!
         </motion.h1>
 
         {step === "auth" && (
