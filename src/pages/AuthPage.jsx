@@ -6,10 +6,12 @@ import instagram from "../images/instagram_dark.jpg";
 import github from "../images/github_dark.png";
 import linkdin from "../images/linkedin_dark.jpg";
 import { useNavigate } from "react-router-dom";
-const navigate = useNavigate();
-const BASE_URL = "https://auth-backend-zfgk.vercel.app/api/v1/users";
+
+
 
 export default function AuthPage() {
+  const BASE_URL = "https://auth-backend-zfgk.vercel.app/api/v1/users";
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({ email: "", password: "", name: "", username: "" });
   const [step, setStep] = useState("auth");
