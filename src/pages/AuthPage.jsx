@@ -83,7 +83,7 @@ export default function AuthPage() {
       const data = await res.json();
       if (res.ok) {
         setMessage(data.message || "Account verified successfully.");
-        window.location.href = "/dashboard"; // Redirect on success
+        window.location.href = "/logout"; // Redirect on success
       } else {
         setMessage(data.message || "Failed to verify OTP.");
       }
